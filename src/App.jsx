@@ -11,7 +11,9 @@ import {
   MoreVertical,
   Bell,
   Link as LinkIcon,
-  MessageSquare
+  MessageSquare,
+  Trash2,
+  Settings
 } from 'lucide-react';
 import './App.css';
 
@@ -96,6 +98,35 @@ function App() {
     setAssets([asset, ...assets]);
   };
 
+  const deleteClient = (id) => {
+    if (window.confirm('Are you sure you want to delete this client?')) {
+      setClients(clients.filter(c => c.id !== id));
+    }
+  };
+
+  const addColumn = (position) => {
+    const label = prompt('Column Name?');
+    if (!label) return;
+    const newCol = {
+      id: label.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(),
+      label,
+      type: 'text'
+    };
+    const newColumns = [...columns];
+    newColumns.splice(position, 0, newCol);
+    setColumns(newColumns);
+  };
+
+  const deleteColumn = (id) => {
+    if (columns.length <= 1) {
+      alert('You must have at least one column.');
+      return;
+    }
+    if (window.confirm('Delete this column? This will hide the data for all clients.')) {
+      setColumns(columns.filter(c => c.id !== id));
+    }
+  };
+
   const filteredClients = clients.filter(c =>
     Object.values(c).some(val =>
       val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -167,8 +198,23 @@ function App() {
               <table>
                 <thead>
                   <tr>
-                    {columns.map(col => (
-                      <th key={col.id}>{col.label}</th>
+                    {columns.map((col, index) => (
+                      <th key={col.id} className="group">
+                        <div className="th-content">
+                          {col.label}
+                          <div className="th-actions">
+                            <button className="btn-mini" onClick={() => addColumn(index)} title="Add column before">
+                              <Plus size={10} />
+                            </button>
+                            <button className="btn-mini btn-delete" onClick={() => deleteColumn(col.id)} title="Delete column">
+                              <Trash2 size={10} />
+                            </button>
+                            <button className="btn-mini" onClick={() => addColumn(index + 1)} title="Add column after">
+                              <Plus size={10} />
+                            </button>
+                          </div>
+                        </div>
+                      </th>
                     ))}
                     <th>Actions</th>
                   </tr>
@@ -199,16 +245,25 @@ function App() {
                         </td>
                       ))}
                       <td>
-                        <button
-                          className="btn-icon"
-                          onClick={() => {
-                            setSelectedClient(client);
-                            setShowLogs(true);
-                          }}
-                        >
-                          <MessageSquare size={16} />
-                          {client.logs?.length > 0 && <span className="log-count">{client.logs.length}</span>}
-                        </button>
+                        <div className="row-actions">
+                          <button
+                            className="btn-icon"
+                            onClick={() => {
+                              setSelectedClient(client);
+                              setShowLogs(true);
+                            }}
+                          >
+                            <MessageSquare size={16} />
+                            {client.logs?.length > 0 && <span className="log-count">{client.logs.length}</span>}
+                          </button>
+                          <button
+                            className="btn-icon btn-delete"
+                            onClick={() => deleteClient(client.id)}
+                            title="Delete Row"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

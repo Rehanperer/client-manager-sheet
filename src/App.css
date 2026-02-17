@@ -70,13 +70,56 @@ th {
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
+  position: relative;
+}
+
+.th-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.th-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+th:hover .th-actions {
+  opacity: 1;
+}
+
+.btn-mini {
+  padding: 2px;
+  width: 18px;
+  height: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted-foreground);
+}
+
+.btn-mini:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border);
   font-size: 0.9375rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 tr:hover td {
@@ -142,6 +185,16 @@ button {
   background: var(--secondary);
   color: var(--muted-foreground);
   position: relative;
+  flex-shrink: 0;
+}
+
+.btn-delete {
+  color: var(--destructive);
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--destructive);
 }
 
 .btn-icon:hover {
